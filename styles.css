@@ -115,7 +115,7 @@ h2 {
 
 .hero-stats {
   display: grid;
-  grid-template-columns: repeat(3, minmax(110px, 1fr));
+  grid-template-columns: repeat(4, minmax(100px, 1fr));
   gap: 10px;
 }
 
@@ -195,18 +195,32 @@ label {
 
 .segment-card {
   display: grid;
-  grid-template-columns: 112px 1fr auto;
+  grid-template-columns: 22px 112px 1fr;
   gap: 12px;
   align-items: stretch;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #fffdf7;
   padding: 10px;
-  cursor: grab;
 }
 
 .segment-card.dragging {
   opacity: 0.45;
+}
+
+.drag-handle {
+  display: grid;
+  place-items: start center;
+  padding-top: 4px;
+  color: var(--muted);
+  font-size: 18px;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
 }
 
 .thumb {
@@ -285,15 +299,214 @@ label {
 }
 
 .segment-actions {
-  display: grid;
+  display: flex;
   gap: 8px;
-  align-content: start;
+  margin-top: 8px;
 }
 
 .segment-actions button {
-  width: 40px;
-  height: 36px;
+  width: 38px;
+  height: 32px;
   padding: 0;
+}
+
+.segment-actions button.danger:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+button.small {
+  padding: 7px 12px;
+  font-size: 13px;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 累计起止时间 / 片边码 / 声轨偏移 登记行 */
+.sync-strip {
+  grid-column: 1 / -1;
+  border-top: 1px dashed var(--line);
+  padding-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(84px, 120px)) minmax(110px, 1fr) minmax(150px, 1.4fr) minmax(130px, 1fr) minmax(92px, 0.8fr) minmax(92px, 0.8fr);
+  gap: 8px;
+  align-items: end;
+}
+
+.sync-strip .field {
+  gap: 3px;
+  font-size: 11px;
+}
+
+.sync-strip .field input,
+.sync-strip .field select {
+  padding: 7px 8px;
+}
+
+.sync-strip .field input[readonly] {
+  background: #f1efe6;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.confirm-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: stretch;
+}
+
+.badge,
+.mini-badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 4px 9px;
+  font-size: 12px;
+  font-weight: 900;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.badge.ok {
+  background: rgba(77, 118, 86, 0.16);
+  color: var(--green);
+}
+
+.badge.bad {
+  background: rgba(181, 77, 72, 0.14);
+  color: var(--red);
+}
+
+.badge.idle {
+  background: rgba(105, 113, 121, 0.14);
+  color: var(--muted);
+}
+
+.badge.old {
+  background: rgba(212, 155, 53, 0.18);
+  color: #9a6d1d;
+}
+
+.sync-reasons {
+  grid-column: 1 / -1;
+  border-radius: 6px;
+  padding: 7px 9px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.sync-reasons.block {
+  background: rgba(181, 77, 72, 0.09);
+  color: var(--red);
+}
+
+.sync-reasons.invalid {
+  background: rgba(212, 155, 53, 0.14);
+  color: #9a6d1d;
+}
+
+.sync-reasons.ok {
+  background: rgba(77, 118, 86, 0.12);
+  color: var(--green);
+}
+
+.card-history {
+  grid-column: 1 / -1;
+  border-top: 1px dashed var(--line);
+  padding-top: 8px;
+}
+
+.card-history summary {
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.mini-record {
+  margin-top: 8px;
+  border-left: 3px solid var(--muted);
+  border-radius: 0 6px 6px 0;
+  background: #faf8f1;
+  padding: 7px 9px;
+  font-size: 12px;
+  color: var(--ink);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 10px;
+}
+
+.mini-record.ok {
+  border-left-color: var(--green);
+}
+
+.mini-record.bad {
+  border-left-color: var(--red);
+}
+
+.mini-record.old {
+  border-left-color: var(--amber);
+}
+
+.mini-badge.ok {
+  background: rgba(77, 118, 86, 0.16);
+  color: var(--green);
+}
+
+.mini-badge.bad {
+  background: rgba(181, 77, 72, 0.14);
+  color: var(--red);
+}
+
+.mini-badge.old {
+  background: rgba(212, 155, 53, 0.18);
+  color: #9a6d1d;
+}
+
+.mini-reason {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.history-panel {
+  margin-top: 18px;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  min-width: 720px;
+}
+
+.history-table th,
+.history-table td {
+  border: 1px solid var(--line);
+  padding: 8px 10px;
+  text-align: left;
+  vertical-align: top;
+  background: #fffdf7;
+}
+
+.history-table th {
+  background: #f1efe6;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.time-chip {
+  color: var(--cyan);
+  font-size: 12px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
 }
 
 .warning-list {
@@ -338,18 +551,29 @@ label {
   }
 
   .hero-stats {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .segment-card {
-    grid-template-columns: 1fr;
+    grid-template-columns: 22px 1fr;
+  }
+
+  .segment-card .thumb {
+    display: none;
+  }
+
+  .sync-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .sync-strip .field.grow,
+  .confirm-cell,
+  .sync-reasons,
+  .card-history {
+    grid-column: 1 / -1;
   }
 
   .segment-actions {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .segment-actions button {
-    width: 100%;
+    flex-wrap: wrap;
   }
 }

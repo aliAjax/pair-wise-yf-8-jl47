@@ -3,15 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>胶片分镜条核对台</title>
+    <title>胶片试映同步核对台</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <main class="shell">
       <header class="hero">
         <div>
-          <p class="eyebrow">纸质放映胶片整理</p>
-          <h1>胶片分镜条核对台</h1>
+          <p class="eyebrow">试映对片 · 声画同步核对</p>
+          <h1>胶片试映同步核对台</h1>
         </div>
         <div class="hero-stats">
           <div>
@@ -19,7 +19,11 @@
             <strong id="totalDuration">0:00</strong>
           </div>
           <div>
-            <span>破损片段</span>
+            <span>已确认同步</span>
+            <strong id="confirmedCount">0</strong>
+          </div>
+          <div>
+            <span>破损 / 偏色</span>
             <strong id="damageCount">0</strong>
           </div>
           <div>
@@ -47,7 +51,7 @@
         </label>
         <label>
           搜索
-          <input id="searchInput" type="search" placeholder="片段编号或备注" />
+          <input id="searchInput" type="search" placeholder="片段编号、片边码或备注" />
         </label>
         <button id="exportBtn">导出清单</button>
       </section>
@@ -61,8 +65,16 @@
               <input id="codeInput" required placeholder="A-014" />
             </label>
             <label>
-              时长秒数
-              <input id="durationInput" required type="number" min="1" value="12" />
+              时长（秒）
+              <input id="durationInput" required type="number" min="0" step="0.1" value="12" />
+            </label>
+            <label>
+              片边码（Keykode）
+              <input id="edgeCodeInput" type="text" placeholder="不登记则无法确认同步" />
+            </label>
+            <label>
+              声轨偏移（秒，正=声提前 / 负=声滞后）
+              <input id="soundOffsetInput" type="number" step="0.05" value="0" />
             </label>
             <label>
               颜色偏移
@@ -90,7 +102,7 @@
             </label>
             <label>
               备注
-              <textarea id="noteInput" rows="4" placeholder="试映前要留意的画面、接片或声音点"></textarea>
+              <textarea id="noteInput" rows="3" placeholder="试映前要留意的画面、接片或声音点"></textarea>
             </label>
             <button class="primary" type="submit">加入放映清单</button>
           </form>
@@ -98,10 +110,33 @@
 
         <section class="panel list-panel">
           <div class="panel-head">
-            <h2>放映顺序</h2>
-            <span>拖拽片段调整顺序</span>
+            <h2>放映顺序与累计时间</h2>
+            <span>拖动 ≡ 调整顺序；顺序 / 时长 / 偏移变化后，后续确认自动失效并留档</span>
           </div>
           <div id="segmentList" class="segment-list"></div>
+
+          <div class="history-panel">
+            <div class="panel-head">
+              <h2>同步确认历史</h2>
+              <span>旧确认永不删除，状态随当前清单实时复算</span>
+            </div>
+            <div class="table-wrap">
+              <table class="history-table">
+                <thead>
+                  <tr>
+                    <th>确认时间</th>
+                    <th>当时序号</th>
+                    <th>片段</th>
+                    <th>片边码</th>
+                    <th>声轨偏移</th>
+                    <th>累计起止</th>
+                    <th>状态 / 失效原因</th>
+                  </tr>
+                </thead>
+                <tbody id="historyBody"></tbody>
+              </table>
+            </div>
+          </div>
         </section>
 
         <aside class="panel warning-panel">
@@ -111,6 +146,8 @@
       </section>
     </main>
 
+    <script src="rules.js"></script>
+    <script src="store.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
