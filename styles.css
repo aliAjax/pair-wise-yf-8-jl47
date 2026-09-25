@@ -115,7 +115,7 @@ h2 {
 
 .hero-stats {
   display: grid;
-  grid-template-columns: repeat(3, minmax(110px, 1fr));
+  grid-template-columns: repeat(4, minmax(96px, 1fr));
   gap: 10px;
 }
 
@@ -142,7 +142,7 @@ h2 {
 
 .toolbar {
   display: grid;
-  grid-template-columns: minmax(220px, 1fr) 160px minmax(200px, 1fr) auto;
+  grid-template-columns: minmax(200px, 1fr) 150px minmax(180px, 1fr) auto auto;
   gap: 10px;
   align-items: end;
   border: 1px solid var(--line);
@@ -195,14 +195,27 @@ label {
 
 .segment-card {
   display: grid;
-  grid-template-columns: 112px 1fr auto;
+  grid-template-columns: 20px 112px 1fr auto;
   gap: 12px;
   align-items: stretch;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #fffdf7;
   padding: 10px;
+}
+
+.drag-handle {
+  display: grid;
+  place-items: start center;
+  color: var(--muted);
+  font-size: 16px;
   cursor: grab;
+  user-select: none;
+  padding-top: 4px;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
 }
 
 .segment-card.dragging {
@@ -338,11 +351,15 @@ label {
   }
 
   .hero-stats {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .segment-card {
     grid-template-columns: 1fr;
+  }
+
+  .drag-handle {
+    display: none;
   }
 
   .segment-actions {
@@ -351,5 +368,302 @@ label {
 
   .segment-actions button {
     width: 100%;
+  }
+}
+
+/* ---------- 同步核对 ---------- */
+
+.time-window {
+  border-radius: 6px;
+  background: rgba(31, 36, 40, 0.08);
+  padding: 4px 8px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.register-row {
+  display: grid;
+  grid-template-columns: minmax(180px, 1.4fr) minmax(110px, 0.7fr) minmax(130px, 0.8fr);
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.register-row .field {
+  display: grid;
+  gap: 4px;
+  font-size: 11px;
+}
+
+.register-row input {
+  padding: 7px 9px;
+  font-size: 13px;
+}
+
+.register-row input:not(:placeholder-shown) {
+  background: #fff;
+}
+
+.sync-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-top: 8px;
+  border: 1px dashed var(--line);
+}
+
+.sync-box.is-confirmed {
+  border-style: solid;
+  border-color: rgba(77, 118, 86, 0.5);
+  background: rgba(77, 118, 86, 0.1);
+}
+
+.sync-box.is-ready {
+  border-color: rgba(52, 125, 137, 0.55);
+  background: rgba(52, 125, 137, 0.07);
+}
+
+.sync-box.is-blocked {
+  border-color: rgba(181, 77, 72, 0.45);
+  background: rgba(181, 77, 72, 0.06);
+}
+
+.sync-left {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.sync-badge {
+  justify-self: start;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 900;
+  background: rgba(105, 113, 121, 0.16);
+  color: var(--muted);
+}
+
+.sync-badge.ready {
+  background: rgba(52, 125, 137, 0.16);
+  color: var(--cyan);
+}
+
+.sync-badge.blocked {
+  background: rgba(181, 77, 72, 0.15);
+  color: var(--red);
+}
+
+.is-confirmed .sync-badge {
+  background: rgba(77, 118, 86, 0.18);
+  color: var(--green);
+}
+
+.sync-meta {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.blockers {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.blockers em {
+  font-style: normal;
+  border-radius: 4px;
+  padding: 2px 7px;
+  background: rgba(181, 77, 72, 0.12);
+  color: var(--red);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.sync-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+button.small {
+  padding: 7px 12px;
+  font-size: 13px;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.link-btn {
+  border: none;
+  background: none;
+  padding: 4px 6px;
+  color: var(--cyan);
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: underline;
+}
+
+.link-btn:hover {
+  border-color: transparent;
+}
+
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.footnote {
+  margin: 16px 2px 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+/* ---------- 历史弹层与提示 ---------- */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(31, 36, 40, 0.5);
+  z-index: 30;
+}
+
+.modal[hidden] {
+  display: none;
+}
+
+.modal-card {
+  width: min(720px, 100%);
+  max-height: min(82vh, 760px);
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+  padding: 18px;
+}
+
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.modal-head h2 {
+  margin: 0;
+}
+
+.history-scope {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.history-list {
+  display: grid;
+  gap: 10px;
+}
+
+.history-item {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fffdf7;
+  padding: 10px 12px;
+}
+
+.history-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.edge-code {
+  border-radius: 4px;
+  padding: 2px 7px;
+  background: rgba(212, 155, 53, 0.16);
+  color: #8a5e10;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.history-reason {
+  border-radius: 999px;
+  padding: 3px 9px;
+  background: rgba(181, 77, 72, 0.13);
+  color: var(--red);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.history-meta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.history-time {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  max-width: min(680px, calc(100vw - 32px));
+  border-radius: 8px;
+  background: var(--ink);
+  color: #fff8e8;
+  padding: 11px 16px;
+  font-size: 13px;
+  line-height: 1.5;
+  box-shadow: var(--shadow);
+  z-index: 40;
+}
+
+.toast[hidden] {
+  display: none;
+}
+
+@media (max-width: 1120px) {
+  .register-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 660px) {
+  .register-row {
+    grid-template-columns: 1fr;
+  }
+
+  .sync-box {
+    align-items: stretch;
+    flex-direction: column;
   }
 }

@@ -10,13 +10,17 @@
     <main class="shell">
       <header class="hero">
         <div>
-          <p class="eyebrow">纸质放映胶片整理</p>
+          <p class="eyebrow">纸质放映胶片 · 试映对片同步核对</p>
           <h1>胶片分镜条核对台</h1>
         </div>
         <div class="hero-stats">
           <div>
             <span>总时长</span>
             <strong id="totalDuration">0:00</strong>
+          </div>
+          <div>
+            <span>已确认同步</span>
+            <strong id="syncCount">0</strong>
           </div>
           <div>
             <span>破损片段</span>
@@ -47,8 +51,9 @@
         </label>
         <label>
           搜索
-          <input id="searchInput" type="search" placeholder="片段编号或备注" />
+          <input id="searchInput" type="search" placeholder="编号、片边码或备注" />
         </label>
+        <button id="historyBtn">同步历史</button>
         <button id="exportBtn">导出清单</button>
       </section>
 
@@ -61,8 +66,16 @@
               <input id="codeInput" required placeholder="A-014" />
             </label>
             <label>
-              时长秒数
-              <input id="durationInput" required type="number" min="1" value="12" />
+              时长（秒）
+              <input id="durationInput" required type="number" min="0.1" step="0.1" value="12" />
+            </label>
+            <label>
+              片边码
+              <input id="edgeCodeInput" type="text" placeholder="如 KJ-12940+08（确认前必填）" />
+            </label>
+            <label>
+              声轨偏移（秒，可负）
+              <input id="soundOffsetInput" type="number" step="0.1" value="0" />
             </label>
             <label>
               颜色偏移
@@ -99,7 +112,7 @@
         <section class="panel list-panel">
           <div class="panel-head">
             <h2>放映顺序</h2>
-            <span>拖拽片段调整顺序</span>
+            <span>按当前顺序自动累计起止；行内登记片边码与声轨偏移</span>
           </div>
           <div id="segmentList" class="segment-list"></div>
         </section>
@@ -109,8 +122,27 @@
           <div id="warningList" class="warning-list"></div>
         </aside>
       </section>
+
+      <footer class="footnote">
+        确认同步条件：片边码已填、颜色正常、无破损、时长有效。调整顺序或改动某段时长 / 声轨偏移，该段及之后的确认自动失效；改动片边码或偏色 / 破损标记，该段确认失效。旧确认保留在“同步历史”中，关闭页面再打开数据仍在本机。
+      </footer>
     </main>
 
+    <div id="historyModal" class="modal" hidden>
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="historyTitle">
+        <div class="modal-head">
+          <h2 id="historyTitle">同步历史</h2>
+          <button type="button" id="historyCloseBtn" class="icon-btn" aria-label="关闭">×</button>
+        </div>
+        <div id="historyScope" class="history-scope"></div>
+        <div id="historyList" class="history-list"></div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast" hidden></div>
+
+    <script src="rules.js"></script>
+    <script src="store.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
